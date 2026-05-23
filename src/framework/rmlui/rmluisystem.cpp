@@ -3,6 +3,8 @@
 #include <framework/stdext/time.h>
 #include <framework/stdext/format.h>
 #include <framework/core/logger.h>
+#include <framework/platform/platformwindow.h>
+#include <framework/input/mouse.h>
 
 double RmlUiSystemInterface::GetElapsedTime()
 {
@@ -31,4 +33,42 @@ bool RmlUiSystemInterface::LogMessage(Rml::Log::Type type, const Rml::String& me
         break;
     }
     return true;
+}
+
+void RmlUiSystemInterface::JoinPath(Rml::String& translated_path,
+    const Rml::String& document_path, const Rml::String& path)
+{
+    if (path.empty()) {
+        translated_path = document_path;
+        return;
+    }
+    if (path[0] == '/' || path[0] == '\\') {
+        translated_path = path;
+        return;
+    }
+
+    auto slash = document_path.rfind('/');
+    auto backslash = document_path.rfind('\\');
+    auto dirEnd = slash;
+    if (backslash != Rml::String::npos && (slash == Rml::String::npos || backslash > slash))
+        dirEnd = backslash;
+    if (dirEnd != Rml::String::npos)
+        translated_path = document_path.substr(0, dirEnd + 1) + path;
+    else
+        translated_path = path;
+}
+
+void RmlUiSystemInterface::SetMouseCursor(const Rml::String& cursor_name)
+{
+    g_mouse.pushCursor(cursor_name);
+}
+
+void RmlUiSystemInterface::SetClipboardText(const Rml::String& text)
+{
+    g_window.setClipboardText(text);
+}
+
+void RmlUiSystemInterface::GetClipboardText(Rml::String& text)
+{
+    text = g_window.getClipboardText();
 }

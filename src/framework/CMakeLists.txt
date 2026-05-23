@@ -495,6 +495,8 @@ if(FRAMEWORK_GRAPHICS)
         ${CMAKE_CURRENT_LIST_DIR}/rmlui/rmluirenderer.h
         ${CMAKE_CURRENT_LIST_DIR}/rmlui/rmluisystem.cpp
         ${CMAKE_CURRENT_LIST_DIR}/rmlui/rmluisystem.h
+        ${CMAKE_CURRENT_LIST_DIR}/rmlui/rmluifileinterface.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/rmlui/rmluifileinterface.h
         ${CMAKE_CURRENT_LIST_DIR}/rmlui/rmluimanager.cpp
         ${CMAKE_CURRENT_LIST_DIR}/rmlui/rmluimanager.h
 

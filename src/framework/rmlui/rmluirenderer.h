@@ -5,9 +5,11 @@
 #include <RmlUi/Core/Types.h>
 #include <framework/graphics/declarations.h>
 #include <framework/graphics/texture.h>
+#include <framework/graphics/framebuffer.h>
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <string>
 
 class RmlUiRenderInterface : public Rml::RenderInterface {
 public:
@@ -33,12 +35,32 @@ public:
 
     void SetTransform(const Rml::Matrix4f* transform) override;
 
+    Rml::LayerHandle PushLayer() override;
+    void CompositeLayers(Rml::LayerHandle source, Rml::LayerHandle destination,
+        Rml::BlendMode blend_mode, Rml::Span<const Rml::CompiledFilterHandle> filters) override;
+    void PopLayer() override;
+
+    Rml::CompiledFilterHandle CompileFilter(const Rml::String& name,
+        const Rml::Dictionary& parameters) override;
+    void ReleaseFilter(Rml::CompiledFilterHandle filter) override;
+
 private:
     struct CompiledGeometry {
         std::vector<float> vertices;
         std::vector<int> indices;
     };
+    struct LayerEntry {
+        FrameBufferPtr framebuffer;
+        Rml::TextureHandle textureHandle;
+    };
+    struct FilterEntry {
+        Rml::String name;
+        Rml::Dictionary parameters;
+    };
+
     std::vector<CompiledGeometry*> m_geometries;
+    std::vector<LayerEntry> m_layers;
+    std::vector<FilterEntry> m_filters;
     bool m_scissorEnabled = false;
     Rml::Rectanglei m_scissorRegion;
     std::unordered_map<Rml::TextureHandle, TexturePtr> m_textureCache;

@@ -323,7 +323,9 @@ void GraphicalApplication::run()
 
         {
             AutoStat s(STATS_RENDER, "RenderRmlUi");
+            g_painter->saveAndResetState();
             g_rmlui.render();
+            g_painter->restoreSavedState();
         }
 
         {
